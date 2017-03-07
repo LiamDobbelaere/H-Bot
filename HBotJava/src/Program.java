@@ -1,4 +1,6 @@
 import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -7,6 +9,7 @@ import weka.core.converters.ConverterUtils;
 import weka.core.converters.ConverterUtils.DataSource;
 
 import java.util.Enumeration;
+import java.util.Scanner;
 
 /**
  * Created by tomdo on 7/03/2017.
@@ -35,7 +38,7 @@ public class Program {
 
         System.out.println("Training J48 tree...");
 
-        J48 tree = new J48();
+        MultilayerPerceptron tree = new MultilayerPerceptron();
         try {
             tree.buildClassifier(data);
         } catch (Exception e) {
@@ -60,43 +63,47 @@ public class Program {
         System.out.println(eval.toSummaryString("\nResults\n======\n", false));
 
         System.out.println("WI " + data.attribute("a").index());
+        System.out.println("Interactive mode starting..");
 
-        DenseInstance di = new DenseInstance(data.numAttributes());
-        di.setDataset(data);
-        String test = "i like cookies";
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            DenseInstance di = new DenseInstance(data.numAttributes());
+            di.setDataset(data);
+            String test = scanner.nextLine();
 
-        Enumeration<Attribute> ea = data.enumerateAttributes();
+            Enumeration<Attribute> ea = data.enumerateAttributes();
 
-        while (ea.hasMoreElements()) {
-            Attribute next = ea.nextElement();
-            System.out.println(next.name());
-            di.setValue(next.index(), 0);
-        }
-
-        test = test.toLowerCase();
-        for (String s : test.split(" ")) {
-            if (data.attribute(s) != null) {
-                di.setValue(data.attribute(s), 1);
-                System.out.println("Set value 1 for " + s);
+            while (ea.hasMoreElements()) {
+                Attribute next = ea.nextElement();
+                System.out.println(next.name());
+                di.setValue(next.index(), 0);
             }
-        }
 
-        System.out.println(tree.toString());
+            test = test.toLowerCase();
+            for (String s : test.split(" ")) {
+                if (data.attribute(s) != null) {
+                    di.setValue(data.attribute(s), 1);
+                    System.out.println("Set value 1 for " + s);
+                }
+            }
 
-        //di.setValue();
-        double cl = 0;
-        try {
-            di.setClassValue(tree.classifyInstance(di));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            System.out.println(tree.toString());
 
-        System.out.println("Instance class is: " + di.classValue());
+            //di.setValue();
+            double cl = 0;
+            try {
+                di.setClassValue(tree.classifyInstance(di));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        if (di.classValue() > 0.5) {
-            System.out.println("Result for '" + test + "' is suicidal");
-        } else {
-            System.out.println("Result for '" + test + "' is not suicidal");
+            System.out.println("Instance class is: " + di.classValue());
+
+            if (di.classValue() > 0.5) {
+                System.out.println("Result for '" + test + "' is suicidal");
+            } else {
+                System.out.println("Result for '" + test + "' is not suicidal");
+            }
         }
     }
 }
