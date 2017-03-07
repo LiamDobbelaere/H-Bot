@@ -6,17 +6,21 @@ import cPickle as pickle
 #ignore_words = ["je", "jouw", "mijn", "me", "ik", "maar", "jij", "jou", "ben", "bent", "heb", "hebt", "kan", "awel", "jullie", "en", "want"]
 ignore_words = []
 hct = 50 #Header cleanup tolerance
+filename = "reddithelp.arff"
 
 r = []
 
-print "Loading files.."
-files = [f for f in os.listdir('.') if os.path.isfile(f)]
-for f in files:
-	f = f.split('.')[0]
-	if f.isdigit():
-		print "Loading " + f
-		a = pickle.load(open(f + ".p", "rb"))
-		r += a
+#print "Loading files.."
+#files = [f for f in os.listdir('.') if os.path.isfile(f)]
+#for f in files:
+#	f = f.split('.')[0]
+#	if f.isdigit():
+#		print "Loading " + f
+#		a = pickle.load(open(f + ".p", "rb"))
+#		r += a
+
+print "Loading redditdb"
+r += pickle.load(open("redditdb.p", "rb"))
 
 print "Converting to dictionary.."
 
@@ -82,30 +86,36 @@ rows = []
 
 for key in kv:
 	value = kv[key]
-	if i == 0:
-		if len(value) > 1:
-			request = value[0]
-			response = value[1]
+	processText(value[0])
 
-			processText(request)
-			processText(response)
-	#i+=1	
 print "Cleaning up headers with " + str(hct) + "% tolerance"
 cleanupHeaders(hct)
 headers["class"] = 0
 setHeadersToZero()
 
+catA = 0
+catB = 0
+
 for key in kv:
 	value = kv[key]
-	if len(value) > 2:
+	if len(value) > 0:
 		request = value[0]
-		response = value[2]
+		#response = value[2]
 		
-		reqb = binarizeText(request, 1)
-		resb = binarizeText(response, 0)
+		needshelp = 1
+		if "okes" in key:
+			catB += 1
+			needshelp = 0		
+		else:
+			catA +=1
+		reqb = binarizeText(request, needshelp)
+		#resb = binarizeText(response, 0)
 
 		rows.append(reqb)
-		rows.append(resb)
+		#rows.append(resb)
+
+print "Wrote " + str(catA) + " rows of category needs help"
+print "Wrote " + str(catB) + " rows of category no help"
 
 def removeUselessRows():
 	urtol = int(input("Useless rows tolerance: "))
@@ -140,9 +150,9 @@ orderedheaders.sort()
 orderedheaders.remove("class")
 orderedheaders.append("class")
 
-print("Writing to helpdb.arff")
+print("Writing to " + filename)
 
-f = open('helpdb.arff', 'w')
+f = open(filename, 'w')
 
 f.write("@RELATION helpdb\n")
 f.write("\n")
