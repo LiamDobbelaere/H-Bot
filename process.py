@@ -5,8 +5,8 @@ import cPickle as pickle
 
 #ignore_words = ["je", "jouw", "mijn", "me", "ik", "maar", "jij", "jou", "ben", "bent", "heb", "hebt", "kan", "awel", "jullie", "en", "want"]
 ignore_words = []
-hct = 50 #Header cleanup tolerance
-filename = "reddithelp.arff"
+hct = 5 #Header cleanup tolerance
+filename = "reddithelp2.arff"
 
 r = []
 
@@ -35,7 +35,7 @@ for item in r:
 i = 0
 
 def translate_non_alphanumerics(to_translate, translate_to=u'_'):
-    not_letters_or_digits = u'!"#%\'()*+,-./:;<=>?@[\]^_`{|}~'
+    not_letters_or_digits = u'!"#%\'()*+,-./:;<=>?@[\]^_`{|}~\n\r'
     translate_table = dict((ord(char), translate_to) for char in not_letters_or_digits)
     return to_translate.translate(translate_table)
 
