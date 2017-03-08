@@ -5,7 +5,7 @@ import cPickle as pickle
 
 #ignore_words = ["je", "jouw", "mijn", "me", "ik", "maar", "jij", "jou", "ben", "bent", "heb", "hebt", "kan", "awel", "jullie", "en", "want"]
 ignore_words = []
-hct = 5 #Header cleanup tolerance
+hct = 25 #Header cleanup tolerance
 filename = "reddithelp2.arff"
 
 r = []
