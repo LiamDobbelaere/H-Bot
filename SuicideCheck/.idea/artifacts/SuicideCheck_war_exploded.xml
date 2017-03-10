@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="SuicideCheck:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/SuicideCheck_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="SuicideCheck/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="SuicideCheck" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="nz.ac.waikato.cms.weka:weka-stable:3.8.1" />
+          <element id="library" level="project" name="org.json:json:20140107" />
+        </element>
+        <element id="directory" name="res">
+          <element id="dir-copy" path="$PROJECT_DIR$/res" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

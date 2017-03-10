@@ -1,0 +1,45 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/screen.css"/>
+    <title>Title</title>
+</head>
+<body>
+
+<div id="container">
+    <header>
+        <h1>Suicidal Check</h1>
+    </header>
+
+    <p>Enter a text below as input and the tool will determine if the person is suicidal or not.</p>
+    <p>This is an experiment, <b>do not use this in actual critical situations</b>, see footer.</p>
+
+    <p>
+        <a href="http://www.suicide.org/international-suicide-hotlines.html">Get help: International suicide hotlines</a>
+    </p>
+
+    <form>
+        <label for="input">Enter or paste the text to be classified here: </label>
+        <textarea autofocus id="input"></textarea>
+        <input type="submit" value="Check"/>
+        <label id="result">Result: -</label>
+    </form>
+
+    <footer>
+        <h2>Details</h2>
+        <p>There are several weaknesses in this trained model that make it unreliable.</p>
+        <p>I used 200 posts from reddit's /r/SuicideWatch and 200 posts from /r/Jokes. Everything from SuicideWatch was labelled as suicidal (1) while all the Jokes posts were labelled as non suicidal (0).</p>
+        <p>The amount of data should be way higher, and the nature of the data is too unvaried. It's all from reddit and the non suicidal examples only consist of jokes.</p>
+        <p>The model was first experimented with in Weka, then recreated in Java using Weka's Java libraries. The Multilayer Perceptron classifier came out with some of the best results and 97% accuracy, however my original intention was to use a Naive Bayes classifier.</p>
+        <p>Take the accuracy with a big grain of salt, because it was tested on the training data. It's normally recommended to have a completely separate dataset dedicated for testing only.</p>
+        <p>Nevertheless, the results are pretty good although not perfect.</p>
+        <p>Also take note that what you think might be an example of a suicidal person's statement, might not be something they would actually say in reality and may come out as non-suicidal. The model, although limited, is trained on real examples.</p>
+    </footer>
+</div>
+
+<script type="text/javascript" src="assets/js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="assets/js/script.js"></script>
+</body>
+</html>

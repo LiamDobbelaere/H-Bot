@@ -1,3 +1,4 @@
+import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.MultilayerPerceptron;
@@ -15,20 +16,9 @@ import java.util.Scanner;
  * Created by tomdo on 7/03/2017.
  */
 public class Program {
-    public static void main(String[] args) {
-        DataSource source = null;
-        try {
-            source = new DataSource("C:/Users/tomdo/Documents/Weka datasets/reddithelp.arff");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Instances data = null;
-        try {
-            data = source.getDataSet();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws Exception {
+        DataSource source = new DataSource("C:/Users/tomdo/Documents/Weka datasets/reddithelp.arff");
+        Instances data = source.getDataSet();
 
         if (data.classIndex() == -1)
         {
@@ -36,33 +26,25 @@ public class Program {
             System.out.println("[WARNING] Could not find class index info, automatically set class to attribute with name '" + data.classAttribute().name() + "'! (= last attribute)");
         }
 
-        System.out.println("Training J48 tree...");
+        System.out.println(data.numAttributes() + " attributes in dataset");
 
-        MultilayerPerceptron tree = new MultilayerPerceptron();
-        try {
-            tree.buildClassifier(data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Classifier classifier = new J48();
+        classifier.buildClassifier(data);
 
-        System.out.println("J48 classifier ready!");
+        System.out.println("Training classifier (" + classifier.getClass() + ")");
+        System.out.println("Classifier ready!");
 
-        Evaluation eval = null;
-        try {
-            eval = new Evaluation(data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            eval.evaluateModel(tree, data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Evaluation eval = new Evaluation(data);
+        eval.evaluateModel(classifier, data);
 
         System.out.println(eval.toSummaryString("\nResults\n======\n", false));
 
         System.out.println("WI " + data.attribute("a").index());
+
+        System.out.print("Saving classifier...");
+        weka.core.SerializationHelper.write("suicide.classifier", classifier);
+        System.out.println("Done!");
+
         System.out.println("Interactive mode starting..");
 
         Scanner scanner = new Scanner(System.in);
@@ -87,12 +69,12 @@ public class Program {
                 }
             }
 
-            System.out.println(tree.toString());
+            System.out.println(classifier.toString());
 
             //di.setValue();
             double cl = 0;
             try {
-                di.setClassValue(tree.classifyInstance(di));
+                di.setClassValue(classifier.classifyInstance(di));
             } catch (Exception e) {
                 e.printStackTrace();
             }
